@@ -1,4 +1,4 @@
-# Sistema-Cat-logo-Tienda
+# Sistema-Catálogo-Tienda
 OBJETIVO
 El programa es un sistema de consola diseñado para gestionar el catálogo de productos 
 de una microempresa mediante el uso de diccionarios anidados en Python, asociando un 
