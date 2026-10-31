@@ -1,0 +1,115 @@
+# PARTE 3. SISTEMA DE CATÁLOGO DE TIENDA
+catalogo = {
+    "P01": {"nombre": "cuaderno argollado", "precio": 6500, "stock": 20},
+    "P02": {"nombre": "Caja de micropuntas", "precio": 18000, "stock": 12},
+    "P03": {"nombre": "Resma de papel", "precio": 15000, "stock": 8}
+}
+
+def buscar_producto(codigo):
+    """
+    Busca un producto por su código y muestra sus datos clasificados
+    """
+    codigo = codigo.upper()
+    producto = catalogo.get(codigo)
+    
+    if producto:
+        print(f"\n===Producto encontrado [{codigo}]===")
+        print(f"Nombre: {producto['nombre']}")
+        print(f"Precio unitario: {producto['precio']}")
+        print(f"Stock en bodega: {producto['stock']} unidades")
+    else: 
+        print(f"\nEl código {codigo} no exise en el catálogo")
+
+def ingresar_existencias(codigo, cantidad):
+    """
+    Incrementar el valor de 'stock' de un producto dado su código
+    """
+    codigo = codigo.upper()
+    producto = catalogo.get(codigo)
+    if producto: 
+        if cantidad > 0:
+            producto["stock"] += cantidad
+            print(f"\nStock actuaizado. Nuevo stock para {producto['nombre']}: {producto['stock']} unidades")
+        else: 
+            print("\nLa cantidad a ingresar debe ser mayor a cero")
+    else:
+        print(f"\nNo se puede actualizar.El código {codigo} no existe en el catálogo")
+
+def registrar_producto(codigo, nombre, precio, stock):
+    """
+    Permite ingresar un código nuevo
+    """
+    codigo = codigo.upper()
+    if codigo in catalogo: 
+        print(f"\nEl código  {codigo} ya esta registrado con el producto ({catalogo[codigo]['nombre']})")
+        confirmacion = input("¿Desea sobreescribir este producto? (si/no)").strip()
+        if confirmacion != 'si':
+            print("Operación cancelada")
+            return
+    catalogo.update({
+        codigo: {
+            "nombre": nombre,
+            "precio": precio,
+            "stock": stock
+        }
+
+    })   
+    print(f"\nEl producto [{codigo}] {nombre} ha sido registrado correctamente")
+    
+def calcular_valor_inventario():
+    """
+    Recorre el catálogo completo y calcula el valor monetario total del inventario
+    """
+    valor_total = 0
+    print("\n====== RESUMEN DEL INVENTARIO ======")
+    print(f"{'CÓDIGO':<8} / {'NOMBRE':<22} / {'PRECIO':<10} / {'STOCK':<6} / {'SUBTOTAL':<12}")
+    print("-" * 68)
+    for codigo, datos in catalogo.items():
+        subtotal = datos["precio"] * datos["stock"]
+        valor_total += subtotal
+        print(f"{codigo:<8} / {datos['nombre']:<22} / {datos['precio']:<9,} / {datos['stock']:<6} / {subtotal:<11,}")
+    print("-" * 68)
+    print(f"Valor monetario total del inventario: {valor_total}")
+
+
+def menu():
+    while True:
+        print("\n=====================================")
+        print(" SISTEMA DE CATÁLOGO DE TIENDA ")
+        print("\n=====================================")
+        print("1. Buscar producto")
+        print("2. Ingresar existencias")
+        print("3. Registrar o actualizar producto nuevo")
+        print("4. Calcular valor total del inventario")
+        print("5. Salir")
+
+        opcion = input("\nSeleccione una opcion (1-5): ").strip()
+
+        if opcion == "1":
+            cod = input("Ingrese el código del producto: ")
+            buscar_producto(cod)
+        elif opcion == "2":
+            cod = input("Ingrese el código del producto: ")
+            try:
+                cant = int(input("Ingrese la cantidad a añadir al stock: "))
+                ingresar_existencias(cod,cant)
+            except ValueError:
+                print("Error. Debe ingresar un número entero válido")
+        elif opcion == "3":
+            cod = input("Ingrese el nuevo código: ")
+            nom = input("Ingrese el nombre del producto: ")
+            try:
+                prec = float(input("Ingrese el precio unitario: "))
+                stk = int(input("Ingrese el stock inicial: "))
+                registrar_producto(cod, nom, prec, stk)
+            except ValueError:
+                print("Error. El precio y el stock deben ser valores numéricos válidos")
+        elif opcion == "4":
+            calcular_valor_inventario()
+        elif opcion == "5":
+            print("\nSaliendo del sistema. Hasta pronto")
+            break
+        else:
+            print("\nOpción no válida. Intente de nuevo")
+if __name__ == "__main__":
+    menu()
